@@ -361,3 +361,30 @@ class MongoQuery(object):
         allResults = coll.remove(recordJSON)
         logging.debug("| ${allResults} | Remove MongoDB Records | %s | %s | %s |" % (dbName, dbCollName, recordJSON))
         return allResults
+
+    def retrieve_mongodb_records_by_id(self, dbName, dbCollName, objectid, fields=[]):
+        """
+        Retrieve the record from a given MongoDB database collection by '_id'.
+
+        Return data will one record because '_id' sholud be unique and data type is dictionary.
+
+        Usage is:
+        | ${Result} | Retrieve MongoDB Records By ID | DBName | CollectionName | ObjectId |
+        | Log | ${Result} |
+        """
+        dbName = str(dbName)
+        dbCollName = str(dbCollName)
+        try:
+            db = self._dbconnection['%s' % (dbName,)]
+        except TypeError:
+            self._builtin.fail("Connection failed, please make sure you have run 'Connect To Mongodb' first.")
+        coll = db['%s' % dbCollName]
+        if fields:
+            results = coll.find_one({'_id': ObjectId(objectid)}, projection=fields)
+        else:
+            results = coll.find_one({'_id': ObjectId(objectid)})
+
+        if results:
+            return results
+        else:
+            return {}

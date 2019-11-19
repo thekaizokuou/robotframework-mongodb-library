@@ -56,32 +56,3 @@ class MongoConnectionManager(object):
         """
         logging.debug("| Disconnect From MongoDB |")
         self._dbconnection.close()
-
-    def retrieve_mongodb_records_by_id(self, dbName, dbCollName, objectid, fields=[], returnDocuments=False):
-        """
-        Retrieve the record from a given MongoDB database collection by _id
-        Returned value must be single quoted for comparison, otherwise you will
-        get a TypeError error.
-
-        Usage is:
-        | ${Result} | Retrieve MongoDB Records By ID | DBName | CollectionName | ObjectId |
-        | Log | ${Result} |
-        """
-        dbName = str(dbName)
-        dbCollName = str(dbCollName)
-        try:
-            db = self._dbconnection['%s' % (dbName,)]
-        except TypeError:
-            self._builtin.fail("Connection failed, please make sure you have run 'Connect To Mongodb' first.")
-        coll = db['%s' % dbCollName]
-        if fields:
-            results = coll.find_one({'_id': ObjectId(objectid)}, fields)
-        else:
-            results = coll.find_one({'_id': ObjectId(objectid)})
-        if returnDocuments:
-            return list(results)
-        else:
-            response = ''
-            for d in results:
-                response = '%s%s' % (response, d.items())
-            return response

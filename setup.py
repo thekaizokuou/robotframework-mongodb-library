@@ -15,8 +15,8 @@ requirements = [
     'tox>=3.0.0',
     'coverage',
     'robotframework>=3.0',
-    'pymongo>=3.8.0',
-    'bson>=0.5.8'
+    'bson>=0.5.8',
+    'pymongo>=3.8.0'
 ]
 
 test_requirements = [
